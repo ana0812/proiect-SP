@@ -1,8 +1,9 @@
 #include "Oferta.h"
 #include<iostream>
 using namespace std;
+#pragma warning(disable : 4996)
 
-Oferta::Oferta(string Tara, string Oras, int Pret, int nopti, string d_inceput, string d_sfarsit, string Hotel, int Cod, int locuri_disp)
+Oferta::Oferta(string Tara, string Oras, int Pret, int nopti, string d_inceput, string d_sfarsit, string Hotel, int locuri_disp, int Cod)
 	:tara(Tara), oras(Oras), pret(Pret), 
 	 nr_nopti(nopti), data_inceput(d_inceput), data_sfarsit(d_sfarsit), 
 	 hotel(Hotel), cod(Cod), locuri_disponibile(locuri_disp) {}
@@ -29,6 +30,15 @@ ostream& operator <<(ostream& st, const Oferta& o) {
 
 string Oferta::get_tara() {
 	return tara;
+}
+
+string Oferta::get_di()
+{
+	return data_inceput;
+}
+string Oferta::get_ds()
+{
+	return data_sfarsit;
 }
 
 void Oferta::init(string Tara, string Oras, int Pret, int nopti, string d_inceput, string d_sfarsit, string Hotel, int locuri_disp, int Cod) {
