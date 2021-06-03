@@ -13,6 +13,10 @@ public:
     void afisare();
     void init(string Tara, string Oras, int Pret, int nopti, string d_inceput, string d_sfarsit, string Hotel, int locuri_disp, int Cod);
     friend ostream& operator <<(ostream&, const Oferta&);
+    friend void rezervare();
+    friend void citire_istoric(int&ok, int&i);
+    friend void citire_istoric_rez_anulate(int& ok);
+    friend void anulare();
     string get_tara();
     string get_di();
     string get_ds();

@@ -4,38 +4,42 @@
 #include<vector>
 #include<string>
 #include<fstream>
+#include<sstream>
 using namespace std;
 #pragma warning(disable : 4996)
 
-Agentie a;
+//variabilele globale din cadrul programului
+Agentie a;   //un obiect de tip agentie
+string mail;  //mail-ul care corespunde user-ului care este logat in cont
 
+void afisare() {
+    system("cls");
+    cout << "\t\t\t\t\t\tOferte disponibile - Let's travel!" << endl;
+    cout << "\t\t\t\t\t\t1. Afisare oferte." << endl;
+    cout << "\t\t\t\t\t\t2. Afisare oferte in functie de tara. In total oferim sejururi in " << a.tari.size() << " tari." << endl;
+    cout << "\t\t\tAlegeti optiunea: ";
 
-void afisare(vector<Oferta> const& oferte, vector <string> const& tari) {
-	cout << "1. Afisare oferte." << endl;
-	cout << "2. Afisare oferte in functie de tara. In total oferim sejururi in "<<tari.size()<<" tari." << endl;
-	cout << "Alegeti optiunea: ";
-
-	int optiune; cin >> optiune; cout << endl;
-	if (optiune == 1) {
-		//Oferta o - trebe sa zic tipul elementelor(Oferta) 
-		//"o" o sa fie pe rand fiecare element din vectorul :oferte
-		for (Oferta const& o : oferte) {
-			cout << o << endl;   //afisez folosind supraincarcarea operatorului
-		}
-	}
-	else {
-		for (string const& tara : tari) {
-			cout << "	---Tara: " << tara<<" ---"<<endl<<endl;
-			for (Oferta o : oferte) {
-				// string1.compare(string2) -> 0 daca sunt identice stringurile
-				if (!tara.compare(o.get_tara())) {
-					o.afisare(); //afisez folosind functie
-					// n am mai folosit supraincarcarea ptc imi afisa si Tara: si nu voiam sa se repete
-					cout << endl;
-				}
-			}
-		}
-	}
+    int optiune; cin >> optiune; cout << endl;
+    if (optiune == 1) {
+        //Oferta o - trebe sa zic tipul elementelor(Oferta) -> "o" o sa fie pe rand fiecare element din vectorul :oferte
+        for (Oferta const& o : a.oferte) {
+            cout << o << endl;   //afisez folosind supraincarcarea operatorului
+        }
+    }
+    else {
+        for (string const& tara : a.tari) {
+            cout << "\t\t\t\t\t\tTARA: " << tara << " ---" << endl << endl;
+            for (Oferta o : a.oferte) {
+                // string1.compare(string2) -> 0 daca sunt identice stringurile
+                if (!tara.compare(o.get_tara())) {
+                    o.afisare(); //afisez folosind functie
+                    // n am mai folosit supraincarcarea ptc imi afisa si Tara: si nu voiam sa se repete
+                    cout << endl;
+                }
+            }
+        }
+    }
+    system("pause");
 }
 
 void corect(char* s)
@@ -47,30 +51,32 @@ void corect(char* s)
             s[i] = s[i] + 'a' - 'A';
 }
 
-void cautare(vector<Oferta> const& oferte, vector <string> const& tari)
+void cautare()
 {
+    system("cls");
+    cout << "\t\t\t\t\t\tCAUTARE" << endl<<endl;
     int ok1 = 0, ok2 = 0;// ok1 o sa fie 1 daca  vrea filtru dupa locatie, ok2 daca vrea filtru dupa perioada
-    cout << "Daca doresti sa filtrezi ofertele in functie de locatie, APASATI 1, altfel APASATI 0." << '\n';
+    cout << "\t\t\tDaca doresti sa filtrezi ofertele in functie de locatie, APASATI 1, altfel APASATI 0." << '\n';
     int x;
     cin >> x;
     cin.ignore();
     if (x == 1)
         ok1 = 1;
 
-    cout << "Daca doresti sa filtrezi ofertele vazute in functie de perioada, APASATI 1, altfel APASATI 0." << '\n';
+    cout << "\t\t\tDaca doresti sa filtrezi ofertele vazute in functie de perioada, APASATI 1, altfel APASATI 0." << '\n';
     cin >> x;
     cin.ignore();
     if (x == 1)
         ok2 = 1;
-    cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
+    cout << "\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
     int z = 0;// ca sa  se incrementeze  cand se printeaza oferte, sa stiu daca dupa criteriile utilizatorului s-au gasit sau nu oferte
     //daca z=0  dupa if-uri inseamna ca nu s a agsit vreo oferte pt el
     if (ok1 == 0 && ok2 == 0)// daca nu doreste in functie de tara sau de perioada se afiseaza toate ofertele
     {
-        for (string const& tara : tari)
+        for (string const& tara : a.tari)
         {
             cout << "	---Tara: " << tara << " ---" << endl << endl;
-            for (Oferta o : oferte)
+            for (Oferta o : a.oferte)
             {
                 // string1.compare(string2) -> 0 daca sunt identice stringurile
                 if (!tara.compare(o.get_tara()))
@@ -92,8 +98,8 @@ void cautare(vector<Oferta> const& oferte, vector <string> const& tari)
             cin >> sir;
             cin.ignore();
             corect(sir);//folosesc functia in care transform ceva gen FrAnTa in Franta
-            cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
-            for (Oferta o : oferte)
+            cout << "\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
+            for (Oferta o : a.oferte)
             {
                 char c[40];
                 strcpy(c, o.get_tara().c_str());//am pus stringul care reprezinta tara intr-un char
@@ -142,10 +148,10 @@ void cautare(vector<Oferta> const& oferte, vector <string> const& tari)
                 psu = strtok(NULL, ".");
             }
 
-            cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
-            for (string const& tara : tari)
+            cout << "\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
+            for (string const& tara : a.tari)
             {
-                for (Oferta o : oferte)
+                for (Oferta o : a.oferte)
                     if (!tara.compare(o.get_tara()))
                     {// pentru fiecare  oferta pe care o am in fisier,compar cu perioadele pe care le am primit de la utilizator
                         char cio[40], cso[40];
@@ -257,10 +263,10 @@ void cautare(vector<Oferta> const& oferte, vector <string> const& tari)
                 psu = strtok(NULL, ".");
             }
 
-            cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
-            for (string const& tara : tari)
+            cout << "\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << '\n';
+            for (string const& tara : a.tari)
             {
-                for (Oferta o : oferte)
+                for (Oferta o : a.oferte)
                     if (!tara.compare(o.get_tara()))
                     {
                         char cio[40], cso[40];
@@ -337,45 +343,26 @@ void cautare(vector<Oferta> const& oferte, vector <string> const& tari)
         cin >> q;
         cin.ignore();
         if (q == 1)
-            cautare(oferte, tari);
+            cautare();
     }
-    cout << "Doresti sa rezervi una dintre ofertele vazute? APASATI 1 daca da, APASATI 0 daca nu" << '\n';
-    int a;
-    cin >> a;
-    cin.ignore();
-    if (a == 1)
-    {
-        cout << "Care este numarul sejurului ales?" << '\n';
-        int b;
-        cin >> b;
-        cin.ignore();
-        //rezervare(b, oefrte);
-    }
-    else
-    {
+
         cout << " Daca doresti sa cauti alta oferta APASATI 1." << '\n';
         int b;
         cin >> b;
         cin.ignore();
         if (b == 1)
-            cautare(oferte, tari);
-    }
+            cautare();
 }
 
-void caut(vector<Oferta> const& oferte, vector <string> const& tari) {
-    cout << "Bine ai venit in cautare!" << endl;
-        cautare(oferte, tari);
-}
-
-bool  verificareCont(const string& mail) {
-    ifstream c;
-    c.open("cont.txt");
+bool  verificareCont(const string& mail1) {
+    fstream c;
+    c.open("cont.txt", ios::in);
     string m, t, p;
-
-    while (!c.eof()) {
+    while (!c.eof())
+    {
         c >> m >> t >> p;
         if (!c.eof()) {
-            if (!m.compare(mail))
+            if (!m.compare(mail1))
                 return false;
         }
     }
@@ -384,26 +371,32 @@ bool  verificareCont(const string& mail) {
 }
 
 void creareCont() {
-    string mail, tel, par;
-    cout << "Pentru a crea un cont va rugam sa introduceti urmatoarele date: " << endl;
-    cout << "E-mail: "; cin >> mail;
-    cout << "\nNumar de telefon: "; cin >> tel;
-    cout << "\nParola: "; cin >> par;
-    cout << mail << " " << tel << " " << par;
-
-    if (!verificareCont(mail))
+    system("cls");
+    string mail1, tel, par;
+    cout << "\t\t\t\t\t\tNe bucuram ca vreti sa fiti mai aproape de servicile noastre! LET'S TRAVEL" << endl << endl;
+    cout << "\t\t\t\t\t\tPentru a crea un cont va rugam sa introduceti urmatoarele date: " << endl;
+    cout << "\t\t\tE-mail: "; cin >> mail1;
+    cout << "\n\t\t\tNumar de telefon: "; cin >> tel;
+    cout << "\n\t\t\tParola: "; cin >> par;
+    if (!verificareCont(mail1))
     {
         cout << "Deja exista un cont cu acest email. Va rugam incercati cu alta adresa.";
+        system("pause");
         return;
     }
-        
     fstream c;
     c.open("cont.txt", ios::app);
     if (c.is_open()) {
-        c << mail << " " << tel << " " << par << endl;
+        c << mail1 << " " << tel << " " << par << endl;
     }
-
     c.close();
+    fstream is;
+    is.open("istoric.txt", ios::app);
+    is << mail1 << endl;
+    is << '*' << endl;
+    is.close();
+    cout << "Multumim! Contul dvs a fost creat cu succes!" << endl;
+    system("pause");
 }
 
 bool verificareInr(const string& mail, const string& parola) {
@@ -423,94 +416,553 @@ bool verificareInr(const string& mail, const string& parola) {
 }
 
 void inregistrareCont() {
-    cout << "Va rugam sa va inregistrati in cont introducand urmatoarele informatii: " << endl;
-    string mail, parola;
-    cout <<"E-mail: "; cin >> mail;
-    cout << "\nParola: "; cin >> parola;
+    system("cls");
+    cout << "\t\t\t\t\t\tWELCOME BACK, NOW LET'S TRAVEL!" << endl << endl;
+    cout << "\t\t\tVa rugam sa va inregistrati in cont introducand urmatoarele informatii: " << endl<<endl;
+    string parola;
+    cout << "\t\t\tE-mail: "; cin >> mail;
+    cout << "\n\t\t\tParola: "; cin >> parola;
 
     if (!verificareInr(mail, parola)) {
-        cout << "Datele nu coincid cu baza noastra de date! Va rugam incercati din nou:)";
+        cout << "Datele nu coincid cu baza noastra de date! Va rugam incercati din nou:)"<<endl;
+        system("pause");
         return;
     }
-    cout << "Ati intrat in cont";
+    cout << "\n\t\t\tAti intrat in cont. Acum puteti efectua/anula/vizualiza rezervari" << endl<<endl;
     //Agentie::logareCont += 1;
     a.logareCont = 1;
+    system("pause");
 }
 
 void delogare() {
-    a.logareCont = 0;
+    if (a.logareCont) {
+        a.logareCont = 0;
+        cout << "\n\t\t\tV-ati delogat. Speram ca v-a placut experienta si va asteptam din nou pe la noi!" << endl;
+    }
+    else {
+        cout << "Trebuie sa fiti mai intai logat pentru a va putea deloga." << endl;
+    }
+    system("pause");
+}
+void modificare_oferta(int nr_oferta, int nr_locuri)
+{
+    fstream of;
+    of.open("oferte.txt");
+    ofstream aux;
+    aux.open("auxiliar.txt");
+    string line;
+    getline(of, line);
+    aux << line << endl;
+    int i = 0;
+    while (!of.eof())
+    {
+        i++;
+        if (i == nr_oferta)
+        {
+            string tara, oras, di, ds, h;
+            int pret, nopti, locuri;
+            of >> tara >> oras >> pret >> nopti >> di >> ds >> h >> locuri;
+            locuri -= nr_locuri;
+            aux << tara << " " << oras << " " << pret << " " << nopti << " " << di << " " << ds << " " << h << " " << locuri;
+        }
+        else
+        {
+            getline(of, line);
+            aux << line << endl;
+        }
+    }
+    aux.close();
+    of.close();
+    char filename1[] = "oferte.txt";
+    char filename2[] = "auxiliar.txt";
+    if (remove(filename1) != 0)
+        perror("File deletion failed");
+    else
+        cout << "File deleted successfully";
+
+    if (rename(filename2, filename1) != 0)
+        perror("Error renaming file");
+    else
+        cout << "File renamed successfully";
+}
+
+void update_istoric(int nr_oferta, int nr_locuri)
+{
+    ifstream is;
+    is.open("istoric.txt");
+    ofstream aux;
+    aux.open("auxiliar.txt");
+    string ma, nl;
+    while (!is.eof())
+    {
+        getline(is, ma);
+        if (!is.eof())
+        {
+            aux << ma << endl;
+            if (!ma.compare(mail))
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    aux << nl << endl;
+                    getline(is, nl);
+                }
+                aux << nr_oferta << " " << nr_locuri << " " << "1" << endl;
+                aux << "*" << endl;
+            }
+            else
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    aux << nl << endl;
+                    getline(is, nl);
+                }
+                aux << "*" << endl;
+            }
+        }
+    }
+    aux.close();
+    is.close();
+    char filename1[] = "istoric.txt";
+    char filename2[] = "auxiliar.txt";
+    if (remove(filename1) != 0)
+        perror("File deletion failed");
+    else
+        cout << "File deleted successfully";
+
+    if (rename(filename2, filename1) != 0)
+        perror("Error renaming file");
+    else
+        cout << "File renamed successfully";
 }
 
 void rezervare() {
+    system("cls");
+    cout << "\t\t\t\t\t\tAbia asteptam sa rezervi o oferta - LET'S TRAVEL" << endl<<endl;
     if (a.logareCont) {
         //functia de rezervare
+        cout << "Introduceti codul ofertei pe care doriti sa o rezervati" << '\n';
+        int nr;
+        cin >> nr;
+        //cin.ignore();
+        if (nr<1 || nr>a.nrOferte)
+        {
+            cout << "Ne pare rau, dar codul ofertei este inexistent." << '\n';
+            system("pause");
+            return;
+        }
+        cout << "Confirmati ca aceasta este oferta dorita." << '\n';
+        cout << a.oferte[nr - 1];
+        cout << '\n' << "Introduceti tasta 1 daca aceasta este oferta dorita,0 in caz contrar." << '\n';
+        int conf;
+        cin >> conf;
+        //cin.ignore();
+        if (conf == 0)
+        {
+            cout << "Puteti incerca din nou, introducand alt cod." << '\n';
+            system("pause");
+            return;//TREBUIE SA SCHIMBAM SA DUCA LA MENIU
+        }
+        cout << "Cate locuri doriti sa rezervati?" << '\n';
+        cin >> conf;
+        if (conf > a.oferte[nr - 1].locuri_disponibile)
+        {
+            cout << "Nu sunt destule locuri disponibile." << '\n';
+            system("pause");
+            return;
+        }
+        a.oferte[nr - 1].locuri_disponibile -= conf;
+        fstream r;
+        r.open("rezervare.txt", ios::app);
+        if (r.is_open()) {
+            r << nr << " " << mail << " " << conf << endl;
+        }
+        r.close();
+        cout << "Rezervarea a fost efectuata cu succes." << '\n';
+        update_istoric(nr, conf);
+        modificare_oferta(nr, conf);
+        system("pause");
     }
     else {
-        //te intorci in meniu/functia de logare
+        cout << "Nu puteti rezerva oferte daca nu sunteti logat. Nu puteti sa va logati daca nu aveti cont." << endl;
+        system("pause");
     }
 }
 
+void citire_istoric(int&ok,int&i) {
+    ifstream is;
+    is.open("istoric.txt");
+    string ma, nl;
+    int nr_oferta, nr_locuri, valabil;
+    while (!is.eof())
+    {
+        getline(is, ma);
+        if (!is.eof())
+        {
+            if (!ma.compare(mail))
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    stringstream s(nl);
+                    s >> nr_oferta >> nr_locuri >> valabil;
+                    if (valabil) {
+                        cout << "Numarul rezervarii: " << i<<endl;
+                        cout << "Nr locuri rezervate: " << nr_locuri << endl;
+                        cout << a.oferte[nr_oferta-1]<<endl<<endl;
+                        i++;
+                        ok = 1;
+                    }
+                    getline(is, nl);
+                }
+                break;
+            }
+            else
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    getline(is, nl);
+                }
+            }
+        }
+    }
+    is.close();
+}
+
+void update_istoric_anulare(int&alegere) {
+    ifstream is;
+    is.open("istoric.txt");
+    ofstream aux;
+    aux.open("auxiliar.txt");
+    string ma, nl;
+    int nr_oferta, nr_locuri, valabil, i = 1;
+    while (!is.eof())
+    {
+        getline(is, ma);
+        if (!is.eof())
+        {
+            aux << ma << endl;
+            if (!ma.compare(mail))
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    stringstream s(nl);
+                    s >> nr_oferta >> nr_locuri >> valabil;
+                    if (valabil) {
+                        if (i == alegere) {
+                            aux << nr_oferta <<" "<< nr_locuri <<" "<< 0<<endl;
+                        }
+                        else {
+                            aux << nr_oferta << " " << nr_locuri << " " << 1 << endl;
+                        }
+                        i++;
+                    }
+                    else {
+                        aux << nr_oferta << " " << nr_locuri << " " << 0 << endl;
+                    }
+                    getline(is, nl);
+                }
+                aux << "*"<<endl;
+            }
+            else
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    aux << nl << endl;
+                    getline(is, nl);
+                }
+                aux << "*" << endl;
+            }
+        }
+    }
+    aux.close();
+    is.close();
+    char filename1[] = "istoric.txt";
+    char filename2[] = "auxiliar.txt";
+    if (remove(filename1) != 0)
+        perror("File deletion failed");
+    else
+        cout << "File deleted successfully";
+
+    if (rename(filename2, filename1) != 0)
+        perror("Error renaming file");
+    else
+        cout << "File renamed successfully";
+}
+
+void update_rezervare_anulare(int& alegere, int&COD, int&PERSOANE) {
+    ifstream is;
+    is.open("rezervare.txt");
+    ofstream aux;
+    aux.open("auxiliar.txt");
+    string ma,nl;
+    int nr_oferta, nr_locuri, i = 1;
+    while (!is.eof())
+    {
+        getline(is, nl);
+        if (!is.eof())
+        {
+            stringstream s(nl);
+            s >> nr_oferta >> ma >> nr_locuri;
+            //cout << nr_oferta << " " << ma << " " << nr_locuri;
+            if (!ma.compare(mail))
+            {
+                if (i != alegere) {
+                    aux << nr_oferta << " " << ma << " " << nr_locuri << endl;
+                }
+                else {
+                    COD = nr_oferta;
+                    PERSOANE = nr_locuri;
+                }
+                i++;
+            }
+            else
+            {
+                aux << nr_oferta << " " << ma << " " << nr_locuri << endl;
+            }
+        }
+    }
+    aux.close();
+    is.close();
+    char filename1[] = "rezervare.txt";
+    char filename2[] = "auxiliar.txt";
+    if (remove(filename1) != 0)
+        perror("File deletion failed");
+    else
+        cout << "File deleted successfully";
+
+    if (rename(filename2, filename1) != 0)
+        perror("Error renaming file");
+    else
+        cout << "File renamed successfully";
+}
+
+void modificare_oferta_anulare(int&COD, int&PERSOANE) {
+    fstream of;
+    of.open("oferte.txt");
+    ofstream aux;
+    aux.open("auxiliar.txt");
+    string line;
+    getline(of, line);
+    aux << line << endl;
+    int i = 0;
+    while (!of.eof())
+    {
+        i++;
+        if (i == COD)
+        {
+            string tara, oras, di, ds, h;
+            int pret, nopti, locuri;
+            of >> tara >> oras >> pret >> nopti >> di >> ds >> h >> locuri;
+            locuri += PERSOANE;
+            aux << tara << " " << oras << " " << pret << " " << nopti << " " << di << " " << ds << " " << h << " " << locuri;
+        }
+        else
+        {
+            getline(of, line);
+            aux << line << endl;
+        }
+    }
+    aux.close();
+    of.close();
+    char filename1[] = "oferte.txt";
+    char filename2[] = "auxiliar.txt";
+    if (remove(filename1) != 0)
+        perror("File deletion failed");
+    else
+        cout << "File deleted successfully";
+
+    if (rename(filename2, filename1) != 0)
+        perror("Error renaming file");
+    else
+        cout << "File renamed successfully";
+}
+
+void anulare()
+{
+    system("cls");
+    cout << "\t\t\t\t\t\tNe pare rau ca ati ajuns in acest punct:(" << endl << endl;
+    if (a.logareCont)
+    {
+        int ok = 0,i=1;
+        citire_istoric(ok,i);
+        if (ok) {
+            int alegere;
+            cout << "\t\t\tAlegeti numarul rezervarii pe care doriti sa o anulati "; cin >> alegere;
+            if (alegere >= 1 && alegere < i) {
+                update_istoric_anulare(alegere);
+                int COD, PERSOANE;
+                update_rezervare_anulare(alegere, COD, PERSOANE);
+                modificare_oferta_anulare(COD,PERSOANE);
+                a.oferte[COD - 1].locuri_disponibile += PERSOANE;
+                cout << "Rezervarea dvs a fost anulata!" << endl;
+                system("pause");
+            }
+            else {
+                cout << "\t\t\tCod invalid, incercati din nou"<<endl;
+                system("pause");
+            }  
+        }
+        else {
+            cout << "Nu aveti nici o rezervare facuta, nu aveti ce sa anulati."<<endl;
+            system("pause");
+        }
+    }
+    else
+    {
+        cout << "Nu puteti anula o rezervare daca nu sunteti logat. Nu puteti sa va logati daca nu aveti cont." << endl;
+        system("pause");
+    }
+}
+
+void citire_istoric_rez_anulate(int&ok) {
+    ifstream is;
+    is.open("istoric.txt");
+    string ma, nl;
+    int nr_oferta, nr_locuri, valabil;
+    while (!is.eof())
+    {
+        getline(is, ma);
+        if (!is.eof())
+        {
+            if (!ma.compare(mail))
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    stringstream s(nl);
+                    s >> nr_oferta >> nr_locuri >> valabil;
+                    if (!valabil) {
+                        //cout << "Numarul rezervarii: " << i << endl;
+                        cout << "Nr locuri rezervate: " << nr_locuri << endl;
+                        cout << a.oferte[nr_oferta - 1] << endl;
+                        //i++;
+                        ok = 1;
+                    }
+                    getline(is, nl);
+                }
+                break;
+            }
+            else
+            {
+                getline(is, nl);
+                while (nl.compare("*"))
+                {
+                    getline(is, nl);
+                }
+            }
+        }
+    }
+    is.close();
+}
+
+void istoric() {
+    system("cls");
+    cout << "Aici puteti vizualiza tot ce ati facut in aplicatie pana in acest punct." << endl << endl;
+    if (a.logareCont) {
+        int ok = 0, i = 1;
+        cout << "RERZERVARI VALABILE: " << endl<<endl;
+        citire_istoric(ok, i);
+        if (!ok) {
+            cout << "Nu aveti nici o rezervare valabila." << endl;
+        }
+
+        ok = 0;
+        cout << "RERZERVARI ANULATE: " << endl<<endl;
+        citire_istoric_rez_anulate(ok);
+        if (!ok) {
+            cout << "Nu ati anulat nici o rezervare pana in acest moment" << endl;
+        }
+        cout << endl;
+        system("pause");
+
+    }
+    else {
+        cout << "\n\t\t\tNu puteti vizualiza istoricul daca nu sunteti logat. Nu puteti sa va logati daca nu aveti cont." << endl;
+        system("pause");
+    }
+}
+
+void init() {
+    fstream fisier;
+    fisier.open("oferte.txt", ios::in);
+    //primul rand din fisier: 2 2 Spania Franta -> numarul de oferte, numarul de tari, tarile
+    //apoi pe fiecare rand este scrisa cate o oferta
+
+    //variabile pe care le folosesc la citirea din fisier
+    string t, o, di, ds, h, tara;
+    int pr, nopti, pers, n, n_tari;
+    int i = 0, j = 0;
+
+    fisier >> n; //citesc numarul de oferte
+    fisier >> n_tari; //citesc numarul de tari
+
+    Agentie aux(n, n_tari); //imi creez un obiect de tip agentie
+    a = aux; //il copiez in agentia mea a care este variabila globala - sa o pot accesa in toate functiile
+
+    //citesc tarile
+    while (j < n_tari) {
+        fisier >> tara;
+        a.setTara(tara); //adaug tara in vectorul de tari din cadrul agentiei
+        j++;
+    }
+
+    //citesc fiecare oferta din fisier
+    if (fisier.is_open()) {
+        while (1) {
+            fisier >> t >> o >> pr >> nopti >> di >> ds >> h >> pers;
+            if (fisier.eof())
+                break;
+            Oferta o(t, o, pr, nopti, di, ds, h, pers, i + 1); //creez obiectul pt oferta pe care am citit-o
+            i++;
+            a.setOferta(o); //adaug oferta in vectorul de oferte din cadrul agentiei
+        }
+    }
+    fisier.close();
+}
+
+void legenda(int& n) {
+    cout << "\t\t\t\t\t\tMeniu - Let's travel " << endl<<endl<<endl;
+    cout << "\t\t\t\t\t\t1) Vizualizare oferte" << endl;
+    cout << "\t\t\t\t\t\t2) Cautare oferte" << endl<<endl;
+    cout << "\t\t\t\t\t\t3) Rezervare oferta" << endl;
+    cout << "\t\t\t\t\t\t4) Anulare rezervare" << endl;
+    cout << "\t\t\t\t\t\t5) Vizualizare istoric" << endl<<endl;
+    cout << "\t\t\t\t\t\t6) Creare cont" << endl;
+    cout << "\t\t\t\t\t\t7) Intra in cont" << endl;
+    cout << "\t\t\t\t\t\t8) Iesi din cont" << endl<<endl;
+    cout << "\t\t\t\t\t\t0) Inchide aplicatia"<<endl<<endl;
+    cout << "\t\t\t\t\t\tAlegerea dumneavoastra: ";
+    cin >> n;
+}
+void meniu()
+{
+    int n;
+    legenda(n);
+    while (n != 0)
+    {
+        if (n == 1) afisare();
+        else if (n == 2) cautare();
+        else if (n == 3) rezervare();
+        else if (n == 4) anulare();
+        else if (n == 5) istoric();
+        else if (n == 6) creareCont();
+        else if (n == 7) inregistrareCont();
+        else if (n == 8) delogare();
+        else if (n == 0) break;
+        else cout << "\n   Nu ati introdus o optiune valida";
+
+        system("cls");
+        legenda(n);
+    }
+}
 
 int main()
 {
-	fstream fisier;
-	fisier.open("oferte.txt", ios::in);
-//primul rand din fisier: 2 2 Spania Franta
-// numarul de oferte, numarul de tari, tarile
-//apoi pe fiecare rand este scrisa cate o oferta
-
-	//variabile pe care le folosesc la citirea din fisier
-	string t, o, di, ds, h;
-	int pr, nopti, pers,n, n_tari;
-	int i = 0;
-
-	fisier >> n; //citesc numarul de oferte
-	//vector <Oferta> oferte(n); //vectorul care o sa contina toate ofertele citite
-	fisier >> n_tari; //citesc numarul de tari
-	//vector <string> tari(n_tari);
-
-    Agentie aux(n, n_tari);
-    a = aux;
-
-	int j = 0;
-	string tara;
-	//citesc tarile
-	while (j < n_tari) {
-		fisier >> tara;
-        a.setTara(tara);
-		//tari[j++] = tara;
-        j++;
-	}
-	
-	if (fisier.is_open()) {
-		while (1) {
-			if (fisier.eof())
-				break;
-			fisier >> t >> o >> pr >> nopti >> di >> ds >> h >> pers;
-			/*cout << t << " " << o << " " << pr << " " << nopti << " " << di << " " << ds << " " << h << " " << pers;*/
-			//oferte[i++].init(t, o, pr, nopti, di, ds, h, pers, i + 1);
-			//n am stiut exact cum functioneaza dar nu mergea apelat constructoul - am facut functie pt initializare
-            Oferta o(t, o, pr, nopti, di, ds, h, pers, i + 1);
-            a.setOferta(o);
-		}
-	}
-
-    //cout << "merge";
-    cout << a;
-
-	//afisare(oferte, tari);
-    //caut(oferte, tari);
-    //creareCont();
-    //inregistrareCont();
-
-	/* cum functioneaza constructorul + adaugarea de elemente in vector
-	Oferta o1("Spania", "Barcelona", 500, 7, "01.02.03", "02.02.02", "ana", 3,20);
-	Oferta o2("Franta", "Paris", 700, 7, "01.02.03", "02.02.02", "ana", 3, 20);
-	Oferta o3("Spania", "Valencia", 500, 7, "01.02.03", "02.02.02", "ana", 3, 20);
-
-	vector <Oferta> oferte;
-	oferte.push_back(o1);
-	oferte.push_back(o2);
-	oferte.push_back(o3);*/
-
+    init();
+    meniu();
 }

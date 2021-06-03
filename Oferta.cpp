@@ -4,9 +4,9 @@ using namespace std;
 #pragma warning(disable : 4996)
 
 Oferta::Oferta(string Tara, string Oras, int Pret, int nopti, string d_inceput, string d_sfarsit, string Hotel, int locuri_disp, int Cod)
-	:tara(Tara), oras(Oras), pret(Pret), 
-	 nr_nopti(nopti), data_inceput(d_inceput), data_sfarsit(d_sfarsit), 
-	 hotel(Hotel), cod(Cod), locuri_disponibile(locuri_disp) {}
+	:tara(Tara), oras(Oras), pret(Pret),
+	nr_nopti(nopti), data_inceput(d_inceput), data_sfarsit(d_sfarsit),
+	hotel(Hotel), cod(Cod), locuri_disponibile(locuri_disp) {}
 
 void Oferta::afisare() {
 	cout << "Oras: " << oras << endl;
